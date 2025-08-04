@@ -1,5 +1,5 @@
-console.log('Hello world');
-console.log('Hello world');
-console.log('Hello world');
-console.log('Hello world');
-console.log('Hello world');
+import { initMongoDBConnection } from './db/initMongoDBConnection.js';
+import { startServer } from './server.js';
+
+await initMongoDBConnection();
+startServer();

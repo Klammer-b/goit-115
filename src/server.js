@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { json } from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import { getEnvVar } from './utils/getEnvVar.js';
@@ -12,6 +12,12 @@ export const startServer = () => {
   const app = express();
 
   app.use([requestIdMiddleware, pino(), cors()]);
+  app.use(
+    json({
+      type: ['application/json', 'application/vnd.api+json'],
+      limit: '100kb',
+    }),
+  );
 
   app.use(router);
 

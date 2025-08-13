@@ -12,8 +12,11 @@ export const getStudentById = async (studentId) => {
 };
 
 export const createStudent = async (payload) => {
-  const student = await Student.create(payload);
-
+  const { firstName, lastName, ...rest } = payload;
+  const student = await Student.create({
+    ...rest,
+    name: `${firstName} ${lastName}`,
+  });
   return student;
 };
 

@@ -1,5 +1,9 @@
 import Joi from 'joi';
-import { GENDERS } from '../constants/genders.js';
+import {
+  ageValidation,
+  avgMarkValidation,
+  genderValidation,
+} from './helpers.js';
 
 export const createStudentValidationSchema = Joi.object({
   firstName: Joi.string().min(3).max(30).required().messages({
@@ -8,13 +12,11 @@ export const createStudentValidationSchema = Joi.object({
   lastName: Joi.string().min(3).max(30).required().messages({
     'any.required': "It's required",
   }),
-  age: Joi.number().integer().min(6).max(17).required().messages({
+  age: ageValidation().required().messages({
     'number.min': 'Too low: {#label} - {#value}!',
     'number.max': 'Too large: {#label} - {#value}!',
   }),
-  avgMark: Joi.number().min(1).max(12).required(),
-  gender: Joi.string()
-    .valid(...Object.values(GENDERS))
-    .required(),
+  avgMark: avgMarkValidation().required(),
+  gender: genderValidation().required(),
   onDuty: Joi.bool(),
 });

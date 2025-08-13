@@ -8,13 +8,28 @@ import {
   upsertStudent,
 } from '../services/students.js';
 
+const buildStudentFilters = (query) => ({
+  minAvgMark: query.minAvgMark,
+  maxAvgMark: query.maxAvgMark,
+  minAge: query.minAge,
+  maxAge: query.maxAge,
+  onDuty: query.onDuty,
+  gender: query.gender,
+});
+
 export const getStudentsController = async (req, res) => {
-  const students = await getStudents();
+  const studentsData = await getStudents({
+    page: req.validatedQuery.page,
+    perPage: req.validatedQuery.perPage,
+    sortBy: req.validatedQuery.sortBy,
+    sortOrder: req.validatedQuery.sortOrder,
+    filters: buildStudentFilters(req.validatedQuery),
+  });
 
   res.json({
     status: 200,
     message: 'Successfully found students!',
-    data: students,
+    data: studentsData,
   });
 };
 

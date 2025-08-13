@@ -11,11 +11,17 @@ import { validateBody } from '../middlewares/validateBodyMiddleware.js';
 import { createStudentValidationSchema } from '../validation/createStudentValidationSchema.js';
 import { patchStudentValidationSchema } from '../validation/patchStudentValidationSchema.js';
 import { validateParams } from '../middlewares/isValidObjectIdMiddleware.js';
+import { validateQuery } from '../middlewares/validateQueryMiddleware.js';
+import { getStudentsQueryParamsValidationSchema } from '../validation/getStudentsQueryParamsValidationSchema.js';
 
 const studentsRouter = Router();
 studentsRouter.use('/students/:studentId', validateParams('studentId'));
 
-studentsRouter.get('/students', getStudentsController);
+studentsRouter.get(
+  '/students',
+  validateQuery(getStudentsQueryParamsValidationSchema),
+  getStudentsController,
+);
 
 studentsRouter.get('/students/:studentId', getStudentByIdController);
 

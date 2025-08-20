@@ -3,6 +3,7 @@ import {
   ageValidation,
   avgMarkValidation,
   genderValidation,
+  objectIdValidation,
 } from './helpers.js';
 
 export const createStudentValidationSchema = Joi.object({
@@ -19,4 +20,5 @@ export const createStudentValidationSchema = Joi.object({
   avgMark: avgMarkValidation().required(),
   gender: genderValidation().required(),
   onDuty: Joi.bool(),
+  parentId: objectIdValidation(),
 });

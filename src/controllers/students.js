@@ -7,6 +7,7 @@ import {
   updateStudent,
   upsertStudent,
 } from '../services/students.js';
+import { USER_ROLES } from '../constants/roles.js';
 
 const buildStudentFilters = (query) => ({
   minAvgMark: query.minAvgMark,
@@ -18,12 +19,18 @@ const buildStudentFilters = (query) => ({
 });
 
 export const getStudentsController = async (req, res) => {
+  const filters = buildStudentFilters(req.validatedQuery);
+
+  if (req.user.role === USER_ROLES.PARENT) {
+    filters.parentId = req.user._id;
+  }
+
   const studentsData = await getStudents({
     page: req.validatedQuery.page,
     perPage: req.validatedQuery.perPage,
     sortBy: req.validatedQuery.sortBy,
     sortOrder: req.validatedQuery.sortOrder,
-    filters: buildStudentFilters(req.validatedQuery),
+    filters,
   });
 
   res.json({
@@ -49,7 +56,10 @@ export const getStudentByIdController = async (req, res) => {
 };
 
 export const createStudentController = async (req, res) => {
-  const student = await createStudent(req.body);
+  const student = await createStudent({
+    ...req.body,
+    parentId: req.body.parentId ?? req.user._id,
+  });
 
   res.status(201).json({
     status: 201,
@@ -76,7 +86,10 @@ export const updateStudentController = async (req, res) => {
 export const upsertStudentController = async (req, res) => {
   const { studentId } = req.params;
 
-  const { isNew, student } = await upsertStudent(studentId, req.body);
+  const { isNew, student } = await upsertStudent(studentId, {
+    ...req.body,
+    parentId: req.body.parentId ?? req.user._id,
+  });
 
   const status = isNew ? 201 : 200;
 

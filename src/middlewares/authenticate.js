@@ -26,6 +26,8 @@ export const authenticate = async (req, res, next) => {
   const user = await User.findById(session.userId);
 
   if (!user) {
+    console.log('User not found!');
+
     await Session.findByIdAndDelete(session._id);
     throw createHttpError(401, 'User, associated with session, is not found!');
   }

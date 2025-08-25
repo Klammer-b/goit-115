@@ -20,7 +20,6 @@ export const authenticate = async (req, res, next) => {
   }
 
   if (session.accessTokenValidUntil < new Date()) {
-    await Session.findByIdAndDelete(session._id);
     throw createHttpError(401, 'Access token expired!');
   }
 

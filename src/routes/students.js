@@ -13,9 +13,17 @@ import { patchStudentValidationSchema } from '../validation/patchStudentValidati
 import { validateParams } from '../middlewares/isValidObjectIdMiddleware.js';
 import { validateQuery } from '../middlewares/validateQueryMiddleware.js';
 import { getStudentsQueryParamsValidationSchema } from '../validation/getStudentsQueryParamsValidationSchema.js';
+import { authenticate } from '../middlewares/authenticate.js';
+import { checkPermissionsToInteractWithStudent } from '../middlewares/checkPermissionsToInteractWithStudent.js';
 
 const studentsRouter = Router();
-studentsRouter.use('/students/:studentId', validateParams('studentId'));
+
+studentsRouter.use('/students', authenticate);
+studentsRouter.use(
+  '/students/:studentId',
+  validateParams('studentId'),
+  checkPermissionsToInteractWithStudent,
+);
 
 studentsRouter.get(
   '/students',

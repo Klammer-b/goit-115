@@ -1,5 +1,6 @@
 import createHttpError from 'http-errors';
 import { Student } from '../db/models/student.js';
+import { saveFile } from '../utils/saveFile.js';
 
 const createPaginationMetadata = (page, perPage, itemsCount) => {
   const totalPagesCount = Math.ceil(itemsCount / perPage);
@@ -113,6 +114,20 @@ export const upsertStudent = async (studentId, payload) => {
       student,
     };
   }
+};
+
+export const uploadStudentsPhoto = async (studentId, file) => {
+  const student = await getStudentById(studentId);
+  if (!student) {
+    throw createHttpError(404, 'Student not found!');
+  }
+  const filePath = await saveFile(file);
+
+  student.photo = filePath;
+
+  await student.save();
+
+  return student;
 };
 
 export const deleteStudentById = async (studentId) => {

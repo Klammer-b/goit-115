@@ -5,6 +5,7 @@ import {
   getStudentByIdController,
   getStudentsController,
   updateStudentController,
+  uploadStudentsPhotoController,
   upsertStudentController,
 } from '../controllers/students.js';
 import { validateBody } from '../middlewares/validateBodyMiddleware.js';
@@ -15,6 +16,7 @@ import { validateQuery } from '../middlewares/validateQueryMiddleware.js';
 import { getStudentsQueryParamsValidationSchema } from '../validation/getStudentsQueryParamsValidationSchema.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { checkPermissionsToInteractWithStudent } from '../middlewares/checkPermissionsToInteractWithStudent.js';
+import { upload } from '../middlewares/multer.js';
 
 const studentsRouter = Router();
 
@@ -49,6 +51,12 @@ studentsRouter.put(
   '/students/:studentId',
   validateBody(createStudentValidationSchema),
   upsertStudentController,
+);
+
+studentsRouter.put(
+  '/students/:studentId/photo',
+  upload.single('photo'),
+  uploadStudentsPhotoController,
 );
 
 studentsRouter.delete('/students/:studentId', deleteStudentByIdController);

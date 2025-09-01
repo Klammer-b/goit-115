@@ -5,6 +5,7 @@ import {
   getStudentById,
   getStudents,
   updateStudent,
+  uploadStudentsPhoto,
   upsertStudent,
 } from '../services/students.js';
 import { USER_ROLES } from '../constants/roles.js';
@@ -96,6 +97,15 @@ export const upsertStudentController = async (req, res) => {
   res.status(status).json({
     status,
     message: `Successfully upserted a student!`,
+    data: student,
+  });
+};
+
+export const uploadStudentsPhotoController = async (req, res) => {
+  const student = await uploadStudentsPhoto(req.params.studentId, req.file);
+  res.send({
+    status: 200,
+    message: 'Successfully uploaded a photo for a student!',
     data: student,
   });
 };

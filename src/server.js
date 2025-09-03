@@ -22,7 +22,10 @@ export const startServer = () => {
     }),
   );
   app.use('/uploads', express.static(UPLOAD_FILES_DIR_PATH));
-  app.use('/api-docs', setupSwagger());
+
+  if (getEnvVar('NODE_ENV', 'development') !== 'production') {
+    app.use('/api-docs', setupSwagger());
+  }
 
   app.use(router);
 

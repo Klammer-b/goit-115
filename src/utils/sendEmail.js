@@ -13,7 +13,7 @@ const transport = nodemailer.createTransport({
   },
 });
 
-await transport.verify();
+// await transport.verify();
 
 export const sendMail = async ({ to, subject, html }) => {
   try {

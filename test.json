@@ -1,0 +1,25 @@
+{
+  "firstName": "Borys",
+  "familyName": "Meshkov",
+  "age": 27,
+  "isInUkraine": true,
+  "cats": [
+    "Uzbek",
+    "Lukas"
+  ],
+  "car": {
+    "manufacturer": "Ford",
+    "model": "Focus",
+    "year": 10
+  },
+  "workExperience": [
+    {
+      "company": "airSlate",
+      "duration": 2
+    },
+    {
+      "company": "Voypost",
+      "duration": 2.5
+    }
+  ]
+}

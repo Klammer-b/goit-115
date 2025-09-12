@@ -21,6 +21,11 @@ const userSchema = new Schema(
       enum: Object.values(USER_ROLES),
       default: USER_ROLES.PARENT,
     },
+    avatarUrl: {
+      type: String,
+      required: false,
+      default: null,
+    },
   },
   {
     versionKey: false,

@@ -1,4 +1,4 @@
-import crypto from 'node:crypto';
+import crypto, { randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import jwt from 'jsonwebtoken';
@@ -11,6 +11,7 @@ import { sendMail } from '../utils/sendEmail.js';
 import { ENV_VARS } from '../constants/envVars.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { TEMPLATE_DIR_PATH } from '../constants/path.js';
+import { getAuthData } from '../utils/googleOAuthClient.js';
 
 const resetPasswordTemplate = fs
   .readFileSync(path.join(TEMPLATE_DIR_PATH, 'send-reset-email-password.html'))
@@ -143,4 +144,23 @@ export const resetPassword = async (token, password) => {
   user.password = await bcrypt.hash(password, 10);
 
   await user.save();
+};
+
+export const verifyGoogleOAuthCode = async (code) => {
+  const authData = await getAuthData(code);
+  let user = await User.findOne({ email: authData.email });
+
+  if (!user) {
+    user = await User.create({
+      name: authData.name,
+      email: authData.email,
+      password: await bcrypt.hash(randomBytes(30), 10),
+      avatarUrl: authData.picture,
+    });
+  }
+
+  await Session.findOneAndDelete({ userId: user._id });
+
+  const session = await Session.create(createSession(user._id));
+  return session;
 };

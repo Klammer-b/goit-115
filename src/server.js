@@ -9,6 +9,7 @@ import { notFoundMiddleware } from './middlewares/notFoundMiddleware.js';
 import { errorHandlerMiddleware } from './middlewares/errorHandlerMiddleware.js';
 import cookieParser from 'cookie-parser';
 import { UPLOAD_FILES_DIR_PATH } from './constants/path.js';
+import { setupSwagger } from './middlewares/setupSwagger.js';
 
 export const startServer = () => {
   const app = express();
@@ -21,6 +22,10 @@ export const startServer = () => {
     }),
   );
   app.use('/uploads', express.static(UPLOAD_FILES_DIR_PATH));
+
+  if (getEnvVar('NODE_ENV', 'development') !== 'production') {
+    app.use('/api-docs', setupSwagger());
+  }
 
   app.use(router);
 
